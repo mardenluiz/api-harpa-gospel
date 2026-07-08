@@ -3,7 +3,6 @@ package com.mardenluiz.harpa.api.infrastructure.database;
 
 import com.mardenluiz.harpa.api.domain.Hymn;
 import com.mardenluiz.harpa.api.domain.HymnVerse;
-import com.mardenluiz.harpa.api.dto.HymnJson;
 import com.mardenluiz.harpa.api.repository.HymnRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.core.io.ClassPathResource;

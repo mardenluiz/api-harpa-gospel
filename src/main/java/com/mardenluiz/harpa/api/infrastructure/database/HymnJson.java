@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.dto;
+package com.mardenluiz.harpa.api.infrastructure.database;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
