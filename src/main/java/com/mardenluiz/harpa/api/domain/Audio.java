@@ -1,6 +1,5 @@
 package com.mardenluiz.harpa.api.domain;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,10 +34,4 @@ public class Audio {
     )
     private Hymn hymn;
 
-    public Audio(String url, double duration, double size, Hymn hymn) {
-        this.url = url;
-        this.duration = duration;
-        this.size = size;
-        this.hymn = hymn;
-    }
 }
