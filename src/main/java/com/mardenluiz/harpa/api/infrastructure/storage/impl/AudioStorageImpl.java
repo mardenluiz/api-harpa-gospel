@@ -3,15 +3,17 @@ package com.mardenluiz.harpa.api.infrastructure.storage.impl;
 
 import com.mardenluiz.harpa.api.dto.AudioResponse;
 import com.mardenluiz.harpa.api.infrastructure.storage.AudioStorage;
-import com.mpatric.mp3agic.Mp3File;
 import jakarta.persistence.EntityNotFoundException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.xml.sax.helpers.DefaultHandler;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -68,19 +70,30 @@ public class AudioStorageImpl implements AudioStorage {
 
     private long getDuration(String key) {
 
+        System.out.println(key);
+
         GetObjectRequest request = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
                 .build();
 
         try (InputStream input = s3Client.getObject(request)) {
-            byte[] bytes = input.readAllBytes();
-            Mp3File mp3 = new Mp3File(String.valueOf(new ByteArrayInputStream(bytes)));
 
-            return mp3.getLengthInMilliseconds();
+            Metadata metadata = new Metadata();
+            ParseContext context = new ParseContext();
+            AutoDetectParser parser = new AutoDetectParser();
+            parser.parse(input, new DefaultHandler(), metadata, context);
+
+            String duration = metadata.get("xmpDM:duration");
+
+            if (duration == null) {
+                return 0L;
+            }
+
+            return Math.round(Double.parseDouble(duration));
 
         } catch (Exception e) {
-            return 0L;
+            throw new RuntimeException("Erro ao obter duração do áudio", e);
         }
     }
 
