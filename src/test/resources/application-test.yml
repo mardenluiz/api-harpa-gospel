@@ -1,0 +1,7 @@
+cloudflare:
+  r2:
+    endpoint: http://localhost
+    access-key: test
+    secret-key: test
+    bucket: bucket-test
+    public-url: http://localhost/files

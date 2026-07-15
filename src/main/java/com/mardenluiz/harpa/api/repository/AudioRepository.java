@@ -11,5 +11,5 @@ import java.util.UUID;
 public interface AudioRepository extends JpaRepository<Audio, UUID> {
 
     Optional<Audio> findByHymn_Number(int number);
-    boolean existsByHymn_Number(Integer number);
+    boolean existsByHymn_Number(int number);
 }

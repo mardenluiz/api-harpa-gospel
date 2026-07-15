@@ -1,11 +1,11 @@
 package com.mardenluiz.harpa.api.infrastructure.storage;
 
-import com.mardenluiz.harpa.api.dto.AudioResponse;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 
 import java.util.Optional;
 
 public interface AudioStorage {
 
-    Optional<AudioResponse> getAudioByNumberFromStorage(int number);
+    Optional<AudioDto> getAudioByNumberFromStorage(int number);
 
 }

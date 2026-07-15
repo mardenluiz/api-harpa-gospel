@@ -1,9 +1,10 @@
 package com.mardenluiz.harpa.api.infrastructure.storage.impl;
 
 
-import com.mardenluiz.harpa.api.dto.AudioResponse;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 import com.mardenluiz.harpa.api.infrastructure.storage.AudioStorage;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -18,10 +19,10 @@ import java.io.InputStream;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AudioStorageImpl implements AudioStorage {
 
-    @Autowired
-    private S3Client s3Client;
+    private final S3Client s3Client;
 
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
@@ -30,8 +31,9 @@ public class AudioStorageImpl implements AudioStorage {
     private String publicUrl;
 
 
+
     @Override
-    public Optional<AudioResponse> getAudioByNumberFromStorage(int hymnNumber) {
+    public Optional<AudioDto> getAudioByNumberFromStorage(int hymnNumber) {
 
         String fileName = String.format("%03d.mp3", hymnNumber);
         String key = "hymns/" + fileName;
@@ -46,7 +48,7 @@ public class AudioStorageImpl implements AudioStorage {
 
             double sizeMb = object.contentLength() / 1024d / 1024d;
 
-            return Optional.of(new AudioResponse(
+            return Optional.of(new AudioDto(
                     publicUrl + "/" + key,
                     Math.round(sizeMb * 100.0) / 100.0,
                     getDuration(key)
@@ -69,8 +71,6 @@ public class AudioStorageImpl implements AudioStorage {
     }
 
     private long getDuration(String key) {
-
-        System.out.println(key);
 
         GetObjectRequest request = GetObjectRequest.builder()
                 .bucket(bucket)

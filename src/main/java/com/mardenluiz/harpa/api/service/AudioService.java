@@ -2,7 +2,7 @@ package com.mardenluiz.harpa.api.service;
 
 import com.mardenluiz.harpa.api.domain.Audio;
 import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.AudioResponse;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 import com.mardenluiz.harpa.api.dto.mapstruct.AudioMapper;
 import com.mardenluiz.harpa.api.infrastructure.storage.impl.AudioStorageImpl;
 import com.mardenluiz.harpa.api.repository.AudioRepository;
@@ -28,16 +28,16 @@ public class AudioService {
 
 
     @Transactional
-    public AudioResponse findByNumber(int number) {
+    public AudioDto findByNumber(int number) {
 
         return audioRepository.findByHymn_Number(number)
-                .map(mapper::audioToAudioResponse)
+                .map(mapper::toAudioResponse)
                 .orElseGet(() -> loadAndPersistAudio(number));
     }
 
-    private AudioResponse loadAndPersistAudio(int number) {
+    private AudioDto loadAndPersistAudio(int number) {
 
-        AudioResponse response = storageLoadAudio(number);
+        AudioDto response = storageLoadAudio(number);
 
         Hymn hymn = findHymn(number);
         Audio audio = mapper.toAudio(response);
@@ -48,7 +48,7 @@ public class AudioService {
         return response;
     }
 
-    private AudioResponse storageLoadAudio(int number) {
+    private AudioDto storageLoadAudio(int number) {
         return audioStorage.getAudioByNumberFromStorage(number)
                 .orElseThrow(() -> new ObjectNotFoundException(number, "Áudio não encontrado."));
     }

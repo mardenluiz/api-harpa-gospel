@@ -2,13 +2,13 @@ package com.mardenluiz.harpa.api.service;
 
 import com.mardenluiz.harpa.api.domain.Audio;
 import com.mardenluiz.harpa.api.domain.Hymn;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 import com.mardenluiz.harpa.api.infrastructure.storage.impl.AudioStorageImpl;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mardenluiz.harpa.api.dto.AudioResponse;
 import com.mardenluiz.harpa.api.dto.mapstruct.AudioMapper;
 
 import com.mardenluiz.harpa.api.repository.AudioRepository;
@@ -48,15 +48,15 @@ class AudioServiceTest {
         int number = 10;
 
         Audio audio = new Audio();
-        AudioResponse response = new AudioResponse("url", 100, 120);
+        AudioDto response = new AudioDto("url", 100, 120);
 
         given(audioRepository.findByHymn_Number(number))
                 .willReturn(Optional.of(audio));
 
-        given(mapper.audioToAudioResponse(audio))
+        given(mapper.toAudioResponse(audio))
                 .willReturn(response);
 
-        AudioResponse result = service.findByNumber(number);
+        AudioDto result = service.findByNumber(number);
 
         assertEquals(response, result);
 
@@ -73,8 +73,8 @@ class AudioServiceTest {
 
         Audio audio = new Audio();
 
-        AudioResponse response =
-                new AudioResponse("url", 500, 200);
+        AudioDto response =
+                new AudioDto("url", 500, 200);
 
         given(audioRepository.findByHymn_Number(number))
                 .willReturn(Optional.empty());
@@ -88,7 +88,7 @@ class AudioServiceTest {
         given(mapper.toAudio(response))
                 .willReturn(audio);
 
-        AudioResponse result = service.findByNumber(number);
+        AudioDto result = service.findByNumber(number);
 
         assertEquals(response, result);
 
@@ -125,8 +125,8 @@ class AudioServiceTest {
 
         int number = 25;
 
-        AudioResponse response =
-                new AudioResponse("url", 200, 100);
+        AudioDto response =
+                new AudioDto("url", 200, 100);
 
         given(audioRepository.findByHymn_Number(number))
                 .willReturn(Optional.empty());

@@ -1,7 +1,7 @@
 package com.mardenluiz.harpa.api.dto.mapstruct;
 
 import com.mardenluiz.harpa.api.domain.Audio;
-import com.mardenluiz.harpa.api.dto.AudioResponse;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -10,9 +10,9 @@ import org.mapstruct.Mapping;
 public interface AudioMapper {
 
 
-    AudioResponse audioToAudioResponse(Audio audio);
+    AudioDto toAudioResponse(Audio audio);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "hymn", ignore = true)
-    Audio toAudio(AudioResponse audioResponse);
+    Audio toAudio(AudioDto audioDto);
 }

@@ -1,8 +1,7 @@
 package com.mardenluiz.harpa.api.controller;
 
-import com.mardenluiz.harpa.api.dto.AudioResponse;
+import com.mardenluiz.harpa.api.dto.AudioDto;
 import com.mardenluiz.harpa.api.service.AudioService;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class AudioController {
     }
 
     @GetMapping("/{number}")
-    public ResponseEntity<AudioResponse> findByNumber(@PathVariable(name = "number")
+    public ResponseEntity<AudioDto> findByNumber(@PathVariable(name = "number")
                                                           @Min(value = 1, message = "O número do hino deve ser maior que zero.")
                                                           @Max(value = 640, message = "O número do hino deve ser menor ou igual a 640.")
                                                           int number) {
