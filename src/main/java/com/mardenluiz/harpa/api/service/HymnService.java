@@ -6,12 +6,15 @@ import com.mardenluiz.harpa.api.dto.PageResponse;
 import com.mardenluiz.harpa.api.dto.mapstruct.HymnMapper;
 import com.mardenluiz.harpa.api.repository.AudioRepository;
 import com.mardenluiz.harpa.api.repository.HymnRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -29,10 +32,9 @@ public class HymnService {
     public HymnDto findHymnByNumber(int number) {
 
         if (audioRepository.existsByHymn_Number(number)) {
-
             return hymnRepository.findByNumber(number)
                     .map(mapper::toHymnDto)
-                    .get();
+                    .orElseThrow(() -> new NoSuchElementException("Elemento não existe!"));
         }
 
         return null;
@@ -56,4 +58,9 @@ public class HymnService {
         );
     }
 
+    public HymnDto findByTitle(@Valid String title) {
+              return hymnRepository.searchByTitle(title)
+                     .map(mapper::toHymnDto)
+                     .orElseThrow(() -> new NoSuchElementException("Hino não encontrado!"));
+    }
 }
