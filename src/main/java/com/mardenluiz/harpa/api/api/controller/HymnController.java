@@ -1,8 +1,8 @@
-package com.mardenluiz.harpa.api.controller;
+package com.mardenluiz.harpa.api.api.controller;
 
-import com.mardenluiz.harpa.api.dto.HymnDto;
-import com.mardenluiz.harpa.api.dto.PageResponse;
-import com.mardenluiz.harpa.api.service.HymnService;
+import com.mardenluiz.harpa.api.api.dto.HymnDto;
+import com.mardenluiz.harpa.api.api.dto.PageResponse;
+import com.mardenluiz.harpa.api.domain.service.HymnService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.formula.functions.T;

@@ -1,7 +1,7 @@
-package com.mardenluiz.harpa.api.dto.mapstruct;
+package com.mardenluiz.harpa.api.api.mapstruct;
 
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.HymnDto;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.api.dto.HymnDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

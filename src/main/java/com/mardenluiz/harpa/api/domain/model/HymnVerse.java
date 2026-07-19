@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.domain;
+package com.mardenluiz.harpa.api.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;

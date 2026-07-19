@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.domain;
+package com.mardenluiz.harpa.api.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,8 +22,8 @@ public class Audio {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String url;
-    private double duration;
-    private double size;
+    private long duration;
+    private long size;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(

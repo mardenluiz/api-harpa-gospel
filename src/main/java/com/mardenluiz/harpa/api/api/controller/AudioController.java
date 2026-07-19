@@ -1,7 +1,7 @@
-package com.mardenluiz.harpa.api.controller;
+package com.mardenluiz.harpa.api.api.controller;
 
-import com.mardenluiz.harpa.api.dto.AudioDto;
-import com.mardenluiz.harpa.api.service.AudioService;
+import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.domain.service.AudioService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;

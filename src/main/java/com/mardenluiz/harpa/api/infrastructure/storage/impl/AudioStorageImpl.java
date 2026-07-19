@@ -1,14 +1,17 @@
 package com.mardenluiz.harpa.api.infrastructure.storage.impl;
 
 
-import com.mardenluiz.harpa.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.domain.model.Audio;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
+import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import com.mardenluiz.harpa.api.infrastructure.storage.AudioStorage;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.xml.sax.helpers.DefaultHandler;
@@ -16,6 +19,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 @Service
@@ -23,6 +27,8 @@ import java.util.Optional;
 public class AudioStorageImpl implements AudioStorage {
 
     private final S3Client s3Client;
+    private final HymnRepository hymnRepository;
+    private final AudioRepository audioRepository;
 
     @Value("${cloudflare.r2.bucket}")
     private String bucket;
@@ -39,9 +45,7 @@ public class AudioStorageImpl implements AudioStorage {
         String key = "hymns/" + fileName;
 
         try {
-
-            HeadObjectResponse object =
-                    s3Client.headObject(HeadObjectRequest.builder()
+            HeadObjectResponse object = s3Client.headObject(HeadObjectRequest.builder()
                             .bucket(bucket)
                             .key(key)
                             .build());
@@ -50,7 +54,7 @@ public class AudioStorageImpl implements AudioStorage {
 
             return Optional.of(new AudioDto(
                     publicUrl + "/" + key,
-                    Math.round(sizeMb * 100.0) / 100.0,
+                    Math.round(sizeMb * 100.0) / 100,
                     getDuration(key)
             ));
 
@@ -68,6 +72,51 @@ public class AudioStorageImpl implements AudioStorage {
 
             throw e;
         }
+    }
+
+
+    public void importAudios() {
+
+        ListObjectsV2Request request = ListObjectsV2Request.builder()
+                        .bucket(bucket)
+                        .prefix("hymns/")
+                        .build();
+
+        ListObjectsV2Response response = s3Client.listObjectsV2(request);
+
+        for (S3Object object : response.contents()) {
+
+            if (!object.key().endsWith(".mp3")) {
+                continue;
+            }
+
+            String fileName = Paths.get(object.key())
+                            .getFileName()
+                            .toString();
+
+            int hymnNumber = Integer.parseInt(fileName.replace(".mp3", ""));
+
+            if (audioRepository.existsByHymn_Number(hymnNumber)) {
+                continue;
+            }
+
+            Hymn hymn = hymnRepository.findByNumber(hymnNumber)
+                    .orElse(null);
+
+            if (hymn == null) {
+                continue;
+            }
+
+            Audio audio = new Audio();
+            audio.setHymn(hymn);
+            audio.setUrl(publicUrl + "/hymns/" + fileName);
+            audio.setSize(object.size());
+            audio.setDuration(getDuration(object.key()));
+
+            audioRepository.save(audio);
+
+        }
+
     }
 
     private long getDuration(String key) {

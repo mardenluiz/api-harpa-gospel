@@ -1,9 +1,9 @@
 package com.mardenluiz.harpa.api.infrastructure.database;
 
 
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.domain.HymnVerse;
-import com.mardenluiz.harpa.api.repository.HymnRepository;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.domain.model.HymnVerse;
+import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;

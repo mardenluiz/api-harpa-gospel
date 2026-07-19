@@ -1,14 +1,10 @@
-package com.mardenluiz.harpa.api.repository;
+package com.mardenluiz.harpa.api.domain.repository;
 
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.HymnDto;
-import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

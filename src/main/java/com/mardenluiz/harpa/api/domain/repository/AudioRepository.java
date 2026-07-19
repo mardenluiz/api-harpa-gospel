@@ -1,6 +1,6 @@
-package com.mardenluiz.harpa.api.repository;
+package com.mardenluiz.harpa.api.domain.repository;
 
-import com.mardenluiz.harpa.api.domain.Audio;
+import com.mardenluiz.harpa.api.domain.model.Audio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

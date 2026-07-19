@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.dto;
+package com.mardenluiz.harpa.api.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.Max;
@@ -24,8 +24,6 @@ public class HymnDto {
     @Max(value = 640, message = "O número do hino deve ser menor ou igual a 640.")
     private int number;
     private String chorus;
-
     private List<VerseDto> verses = new ArrayList<>();
-
     private AudioDto audio;
 }

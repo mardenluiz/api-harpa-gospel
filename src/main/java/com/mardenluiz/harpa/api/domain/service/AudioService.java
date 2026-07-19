@@ -1,12 +1,12 @@
-package com.mardenluiz.harpa.api.service;
+package com.mardenluiz.harpa.api.domain.service;
 
-import com.mardenluiz.harpa.api.domain.Audio;
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.AudioDto;
-import com.mardenluiz.harpa.api.dto.mapstruct.AudioMapper;
+import com.mardenluiz.harpa.api.domain.model.Audio;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.api.mapstruct.AudioMapper;
 import com.mardenluiz.harpa.api.infrastructure.storage.impl.AudioStorageImpl;
-import com.mardenluiz.harpa.api.repository.AudioRepository;
-import com.mardenluiz.harpa.api.repository.HymnRepository;
+import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
+import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.hibernate.ObjectNotFoundException;

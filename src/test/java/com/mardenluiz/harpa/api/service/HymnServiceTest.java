@@ -1,15 +1,17 @@
 package com.mardenluiz.harpa.api.service;
 
+import com.mardenluiz.harpa.api.domain.service.AudioService;
+import com.mardenluiz.harpa.api.domain.service.HymnService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.HymnDto;
-import com.mardenluiz.harpa.api.dto.PageResponse;
-import com.mardenluiz.harpa.api.dto.mapstruct.HymnMapper;
-import com.mardenluiz.harpa.api.repository.AudioRepository;
-import com.mardenluiz.harpa.api.repository.HymnRepository;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.api.dto.HymnDto;
+import com.mardenluiz.harpa.api.api.dto.PageResponse;
+import com.mardenluiz.harpa.api.api.mapstruct.HymnMapper;
+import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
+import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;

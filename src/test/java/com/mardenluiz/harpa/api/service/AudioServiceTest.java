@@ -1,18 +1,19 @@
 package com.mardenluiz.harpa.api.service;
 
-import com.mardenluiz.harpa.api.domain.Audio;
-import com.mardenluiz.harpa.api.domain.Hymn;
-import com.mardenluiz.harpa.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.domain.model.Audio;
+import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.domain.service.AudioService;
+import com.mardenluiz.harpa.api.api.dto.AudioDto;
 import com.mardenluiz.harpa.api.infrastructure.storage.impl.AudioStorageImpl;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mardenluiz.harpa.api.dto.mapstruct.AudioMapper;
+import com.mardenluiz.harpa.api.api.mapstruct.AudioMapper;
 
-import com.mardenluiz.harpa.api.repository.AudioRepository;
-import com.mardenluiz.harpa.api.repository.HymnRepository;
+import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
+import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
