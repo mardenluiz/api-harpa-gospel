@@ -1,6 +1,6 @@
 spring:
   application:
-    name: harpa-api
+    name: harpa-web
 
   # connection database
   datasource:

@@ -1,16 +1,21 @@
 package com.mardenluiz.harpa.api.service;
 
+import com.mardenluiz.harpa.api.domain.exception.ResourceNotFoundException;
 import com.mardenluiz.harpa.api.domain.model.Audio;
 import com.mardenluiz.harpa.api.domain.model.Hymn;
 import com.mardenluiz.harpa.api.domain.service.AudioService;
-import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.domain.service.HymnService;
+import com.mardenluiz.harpa.api.web.dto.AudioDto;
 import com.mardenluiz.harpa.api.infrastructure.storage.impl.AudioStorageImpl;
+import com.mardenluiz.harpa.api.web.dto.HymnDto;
+import com.mardenluiz.harpa.api.web.mapstruct.HymnMapper;
 import org.hibernate.ObjectNotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mardenluiz.harpa.api.api.mapstruct.AudioMapper;
+import com.mardenluiz.harpa.api.web.mapstruct.AudioMapper;
 
 import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
 import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
@@ -32,6 +37,9 @@ class AudioServiceTest {
     private AudioMapper mapper;
 
     @Mock
+    private HymnMapper hymnMapper;
+
+    @Mock
     private AudioRepository audioRepository;
 
     @Mock
@@ -39,6 +47,9 @@ class AudioServiceTest {
 
     @Mock
     private AudioStorageImpl audioStorage;
+
+    @Mock
+    private HymnService hymnService;
 
     @InjectMocks
     private AudioService service;
@@ -57,7 +68,7 @@ class AudioServiceTest {
         given(mapper.toAudioResponse(audio))
                 .willReturn(response);
 
-        AudioDto result = service.findByNumber(number);
+        AudioDto result = service.findAudioByNumber(number);
 
         assertEquals(response, result);
 
@@ -71,11 +82,10 @@ class AudioServiceTest {
         int number = 15;
 
         Hymn hymn = new Hymn();
-
         Audio audio = new Audio();
 
-        AudioDto response =
-                new AudioDto("url", 500, 200);
+        AudioDto response = new AudioDto("url", 500, 200);
+        HymnDto hymnDto = new HymnDto();
 
         given(audioRepository.findByHymn_Number(number))
                 .willReturn(Optional.empty());
@@ -83,13 +93,16 @@ class AudioServiceTest {
         given(audioStorage.getAudioByNumberFromStorage(number))
                 .willReturn(Optional.of(response));
 
-        given(hymnRepository.findByNumber(number))
-                .willReturn(Optional.of(hymn));
+        given(hymnService.findHymnByNumber(number))
+                .willReturn(hymnDto);
 
         given(mapper.toAudio(response))
                 .willReturn(audio);
 
-        AudioDto result = service.findByNumber(number);
+        given(hymnMapper.toHymnEntity(hymnDto))
+                .willReturn(hymn);
+
+        AudioDto result = service.findAudioByNumber(number);
 
         assertEquals(response, result);
 
@@ -115,19 +128,19 @@ class AudioServiceTest {
                 .willReturn(Optional.empty());
 
         assertThrows(
-                ObjectNotFoundException.class, () -> service.findByNumber(number)
+                ResourceNotFoundException.class, () -> service.findAudioByNumber(number)
         );
 
         then(audioRepository).should(never()).save(any());
     }
 
     @Test
+    @DisplayName("Deve lançar ResourceNotFoundException quando o hino não existir")
     void shouldThrowExceptionWhenHymnDoesNotExist() {
 
         int number = 25;
 
-        AudioDto response =
-                new AudioDto("url", 200, 100);
+        AudioDto response = new AudioDto("url", 200, 100);
 
         given(audioRepository.findByHymn_Number(number))
                 .willReturn(Optional.empty());
@@ -135,44 +148,21 @@ class AudioServiceTest {
         given(audioStorage.getAudioByNumberFromStorage(number))
                 .willReturn(Optional.of(response));
 
-        given(hymnRepository.findByNumber(number))
-                .willReturn(Optional.empty());
+        given(hymnService.findHymnByNumber(number))
+                .willThrow(new ResourceNotFoundException(
+                        "Hino de número 25 não encontrado!"
+                ));
 
         assertThrows(
-                ObjectNotFoundException.class,
-                () -> service.findByNumber(number)
+                ResourceNotFoundException.class,
+                () -> service.findAudioByNumber(number)
         );
 
-        then(audioRepository).should(never()).save(any());
-    }
+        then(audioRepository).should().findByHymn_Number(number);
+        then(audioStorage).should().getAudioByNumberFromStorage(number);
+        then(hymnService).should().findHymnByNumber(number);
 
-    @Test
-    void shouldReturnHymn() {
-
-        int number = 30;
-
-        Hymn hymn = new Hymn();
-
-        given(hymnRepository.findByNumber(number))
-                .willReturn(Optional.of(hymn));
-
-        Hymn result = service.findHymn(number);
-
-        assertEquals(hymn, result);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenHymnNotFound() {
-
-        int number = 40;
-
-        given(hymnRepository.findByNumber(number))
-                .willReturn(Optional.empty());
-
-        assertThrows(
-                ObjectNotFoundException.class,
-                () -> service.findHymn(number)
-        );
+        then(audioRepository).should(never()).save(any(Audio.class));
     }
 
 }

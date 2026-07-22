@@ -1,7 +1,7 @@
-package com.mardenluiz.harpa.api.api.mapstruct;
+package com.mardenluiz.harpa.api.web.mapstruct;
 
 import com.mardenluiz.harpa.api.domain.model.Audio;
-import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.web.dto.AudioDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

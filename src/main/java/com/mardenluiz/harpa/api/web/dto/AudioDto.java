@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.api.dto;
+package com.mardenluiz.harpa.api.web.dto;
 
 public record AudioDto(
         String url,

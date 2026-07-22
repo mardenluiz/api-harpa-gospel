@@ -1,5 +1,6 @@
 package com.mardenluiz.harpa.api.service;
 
+import com.mardenluiz.harpa.api.domain.exception.ResourceNotFoundException;
 import com.mardenluiz.harpa.api.domain.service.AudioService;
 import com.mardenluiz.harpa.api.domain.service.HymnService;
 import org.junit.jupiter.api.Test;
@@ -7,9 +8,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.mardenluiz.harpa.api.domain.model.Hymn;
-import com.mardenluiz.harpa.api.api.dto.HymnDto;
-import com.mardenluiz.harpa.api.api.dto.PageResponse;
-import com.mardenluiz.harpa.api.api.mapstruct.HymnMapper;
+import com.mardenluiz.harpa.api.web.dto.HymnDto;
+import com.mardenluiz.harpa.api.web.dto.PageResponse;
+import com.mardenluiz.harpa.api.web.mapstruct.HymnMapper;
 import com.mardenluiz.harpa.api.domain.repository.AudioRepository;
 import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ class HymnServiceTest {
     @Mock
     private AudioRepository audioRepository;
 
-    @Mock
+    @InjectMocks
     private AudioService audioService;
 
     @Mock
@@ -62,9 +63,6 @@ class HymnServiceTest {
     @DisplayName("Deve retornar um hino quando existir áudio")
     void shouldReturnHymnWhenAudioExists() {
 
-        when(audioRepository.existsByHymn_Number(1))
-                .thenReturn(true);
-
         when(hymnRepository.findByNumber(1))
                 .thenReturn(Optional.of(hymn));
 
@@ -77,7 +75,6 @@ class HymnServiceTest {
         assertEquals(1, response.getNumber());
         assertEquals("Mais Perto Quero Estar", response.getTitle());
 
-        verify(audioRepository).existsByHymn_Number(1);
         verify(hymnRepository).findByNumber(1);
         verify(mapper).toHymnDto(hymn);
     }
@@ -86,16 +83,17 @@ class HymnServiceTest {
     @DisplayName("Deve retornar null quando não existir áudio")
     void shouldReturnNullWhenAudioDoesNotExist() {
 
-        when(audioRepository.existsByHymn_Number(1))
-                .thenReturn(false);
+        when(hymnRepository.findByNumber(1))
+                .thenReturn(Optional.empty());
 
-        HymnDto response = hymnService.findHymnByNumber(1);
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+                () -> hymnService.findHymnByNumber(1)
+        );
 
-        assertNull(response);
+        assertEquals("Hino de número 1 não encontrado!", exception.getMessage());
 
-        verify(audioRepository).existsByHymn_Number(1);
-        verify(hymnRepository, never()).findByNumber(anyInt());
-        verify(mapper, never()).toHymnDto(any());
+        verify(hymnRepository).findByNumber(1);
+        verifyNoInteractions(mapper);
     }
 
     @Test
@@ -104,11 +102,7 @@ class HymnServiceTest {
 
         Pageable pageable = PageRequest.of(0, 10);
 
-        Page<Hymn> page = new PageImpl<>(
-                List.of(hymn),
-                pageable,
-                1
-        );
+        Page<Hymn> page = new PageImpl<>(List.of(hymn), pageable, 1);
 
         when(hymnRepository.findAll(pageable))
                 .thenReturn(page);

@@ -1,6 +1,6 @@
 package com.mardenluiz.harpa.api.infrastructure.storage;
 
-import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.web.dto.AudioDto;
 
 import java.util.Optional;
 

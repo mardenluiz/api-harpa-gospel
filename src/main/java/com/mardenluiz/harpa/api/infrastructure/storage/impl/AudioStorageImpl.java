@@ -1,7 +1,7 @@
 package com.mardenluiz.harpa.api.infrastructure.storage.impl;
 
 
-import com.mardenluiz.harpa.api.api.dto.AudioDto;
+import com.mardenluiz.harpa.api.web.dto.AudioDto;
 import com.mardenluiz.harpa.api.domain.model.Audio;
 import com.mardenluiz.harpa.api.domain.model.Hymn;
 import com.mardenluiz.harpa.api.domain.repository.AudioRepository;

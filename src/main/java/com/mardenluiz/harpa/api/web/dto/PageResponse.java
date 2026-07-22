@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.api.dto;
+package com.mardenluiz.harpa.api.web.dto;
 
 import java.util.List;
 

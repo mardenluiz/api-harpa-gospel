@@ -1,4 +1,4 @@
-package com.mardenluiz.harpa.api.api.dto;
+package com.mardenluiz.harpa.api.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.Max;
@@ -18,10 +18,7 @@ import java.util.List;
 @JsonPropertyOrder({"number", "title", "chorus", "author", "meter", "verses", "audio"})
 public class HymnDto {
 
-    @NotBlank(message = "O nome não pode ser nulo ou em branco")
     private String title;
-    @Min(value = 1, message = "O número do hino deve ser maior que zero.")
-    @Max(value = 640, message = "O número do hino deve ser menor ou igual a 640.")
     private int number;
     private String chorus;
     private List<VerseDto> verses = new ArrayList<>();
