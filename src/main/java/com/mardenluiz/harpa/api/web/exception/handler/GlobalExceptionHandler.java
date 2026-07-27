@@ -54,11 +54,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError error = ApiError
                 .builder()
-                    .timestamp(LocalDateTime.now())
-                    .status(status.value())
-                    .error(status.getReasonPhrase())
-                    .message(ex.getMessage())
-                    .path(request.getRequestURI())
+                .timestamp(LocalDateTime.now())
+                .status(status.value())
+                .error(status.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
                 .build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);

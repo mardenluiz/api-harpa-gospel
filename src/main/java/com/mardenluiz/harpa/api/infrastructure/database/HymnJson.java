@@ -2,9 +2,13 @@ package com.mardenluiz.harpa.api.infrastructure.database;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
+@Setter
+@Getter
 public class HymnJson {
 
     @JsonProperty("hymn")
@@ -16,27 +20,4 @@ public class HymnJson {
     @JsonProperty("verses")
     private Map<String, String> verses;
 
-    public String getHymn() {
-        return hymn;
-    }
-
-    public void setHymn(String hymn) {
-        this.hymn = hymn;
-    }
-
-    public String getChorus() {
-        return chorus;
-    }
-
-    public void setChorus(String chorus) {
-        this.chorus = chorus;
-    }
-
-    public Map<String, String> getVerses() {
-        return verses;
-    }
-
-    public void setVerses(Map<String, String> verses) {
-        this.verses = verses;
-    }
 }

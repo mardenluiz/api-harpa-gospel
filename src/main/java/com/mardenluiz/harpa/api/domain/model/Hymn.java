@@ -41,7 +41,7 @@ public class Hymn {
     )
     private Audio audio;
 
-    public void addVerse(HymnVerse verse){
+    public void addVerse(HymnVerse verse) {
         verse.setHymn(this);
         verses.add(verse);
     }

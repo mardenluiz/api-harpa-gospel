@@ -12,8 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 @Import(TestAwsConfig.class)
 class HarpaApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

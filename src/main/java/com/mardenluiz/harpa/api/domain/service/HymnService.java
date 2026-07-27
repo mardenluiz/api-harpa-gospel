@@ -3,6 +3,7 @@ package com.mardenluiz.harpa.api.domain.service;
 
 import com.mardenluiz.harpa.api.domain.exception.ResourceNotFoundException;
 import com.mardenluiz.harpa.api.domain.model.Hymn;
+import com.mardenluiz.harpa.api.infrastructure.cache.hymn.HymnCacheService;
 import com.mardenluiz.harpa.api.web.dto.HymnDto;
 import com.mardenluiz.harpa.api.web.dto.PageResponse;
 import com.mardenluiz.harpa.api.web.mapstruct.HymnMapper;
@@ -22,24 +23,30 @@ public class HymnService {
 
     private final HymnRepository hymnRepository;
     private final HymnMapper mapper;
+    private final HymnCacheService hymnCacheService;
 
 
     public HymnDto findHymnByNumber(int number) {
 
-        return hymnRepository.findByNumber(number)
-                .map(mapper::toHymnDto)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Hino de número " + number + " não encontrado!")
-                );
+        return hymnCacheService.findHymnByNumberCache(number)
+                .orElseGet(() -> {
+                    HymnDto hymn = hymnRepository.findByNumber(number)
+                            .map(mapper::toHymnDto)
+                            .orElseThrow(() ->
+                                    new ResourceNotFoundException("Hino de número " + number + " não encontrado!"));
 
+                    hymnCacheService.save(hymn);
+
+                    return hymn;
+                });
     }
 
 
-    public PageResponse<T> findAll(Pageable pageable) {
+    public PageResponse<HymnDto> findAll(Pageable pageable) {
 
         Page<Hymn> page = hymnRepository.findAll(pageable);
 
-        return new PageResponse<>(
+        return new PageResponse<HymnDto>(
                 page.getContent()
                         .stream()
                         .map(mapper::toHymnDto)
@@ -55,10 +62,14 @@ public class HymnService {
 
 
     public HymnDto findByTitle(String title) {
-              return hymnRepository.searchByTitle(title)
-                     .map(mapper::toHymnDto)
-                     .orElseThrow(() -> new ResourceNotFoundException(String.format(
-                             "Hino com o titulo '%s' não encontrado!", title
-                     )));
+        return hymnRepository.searchByTitle(title)
+                .map(mapper::toHymnDto)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(
+                        "Hino com o titulo '%s' não encontrado!", title
+                )));
+    }
+
+    public void cleanCache() {
+        hymnCacheService.clean();
     }
 }

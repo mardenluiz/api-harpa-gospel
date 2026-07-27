@@ -1,14 +1,15 @@
 package com.mardenluiz.harpa.api.infrastructure.database;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mardenluiz.harpa.api.domain.model.Hymn;
 import com.mardenluiz.harpa.api.domain.model.HymnVerse;
 import com.mardenluiz.harpa.api.domain.repository.HymnRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import tools.jackson.core.type.TypeReference;
-import tools.jackson.databind.ObjectMapper;
+
 
 import java.io.InputStream;
 import java.util.*;
@@ -31,11 +32,10 @@ public class DatabaseHymnImporter {
             return;
         }
 
-        InputStream input = new ClassPathResource("data/harpa_crista_640_hinos.json")
-                        .getInputStream();
+        InputStream input = new ClassPathResource("data/harpa_crista_640_hinos.json").getInputStream();
 
-        Map<String, HymnJson> json = objectMapper.readValue(input, new TypeReference<>() {});
-
+        Map<String, HymnJson> json = objectMapper.readValue(input, new TypeReference<>() {
+        });
         List<Hymn> hymns = new ArrayList<>();
 
         for (Map.Entry<String, HymnJson> entry : json.entrySet()) {

@@ -1,6 +1,5 @@
 package com.mardenluiz.harpa.api.infrastructure.storage.impl;
 
-
 import com.mardenluiz.harpa.api.web.dto.AudioDto;
 import com.mardenluiz.harpa.api.domain.model.Audio;
 import com.mardenluiz.harpa.api.domain.model.Hymn;
@@ -37,7 +36,6 @@ public class AudioStorageImpl implements AudioStorage {
     private String publicUrl;
 
 
-
     @Override
     public Optional<AudioDto> getAudioByNumberFromStorage(int hymnNumber) {
 
@@ -46,9 +44,9 @@ public class AudioStorageImpl implements AudioStorage {
 
         try {
             HeadObjectResponse object = s3Client.headObject(HeadObjectRequest.builder()
-                            .bucket(bucket)
-                            .key(key)
-                            .build());
+                    .bucket(bucket)
+                    .key(key)
+                    .build());
 
             double sizeMb = object.contentLength() / 1024d / 1024d;
 
@@ -59,15 +57,10 @@ public class AudioStorageImpl implements AudioStorage {
             ));
 
         } catch (NoSuchKeyException e) {
-            throw new EntityNotFoundException(
-                    "Áudio do hino " + hymnNumber + " não encontrado."
-            );
+            throw new EntityNotFoundException("Áudio do hino " + hymnNumber + " não encontrado.");
         } catch (S3Exception e) {
-
             if (e.statusCode() == 404) {
-                throw new EntityNotFoundException(
-                        "Áudio do hino " + hymnNumber + " não encontrado."
-                );
+                throw new EntityNotFoundException("Áudio do hino " + hymnNumber + " não encontrado.");
             }
 
             throw e;
@@ -78,21 +71,20 @@ public class AudioStorageImpl implements AudioStorage {
     public void importAudios() {
 
         ListObjectsV2Request request = ListObjectsV2Request.builder()
-                        .bucket(bucket)
-                        .prefix("hymns/")
-                        .build();
+                .bucket(bucket)
+                .prefix("hymns/")
+                .build();
 
         ListObjectsV2Response response = s3Client.listObjectsV2(request);
 
         for (S3Object object : response.contents()) {
-
             if (!object.key().endsWith(".mp3")) {
                 continue;
             }
 
             String fileName = Paths.get(object.key())
-                            .getFileName()
-                            .toString();
+                    .getFileName()
+                    .toString();
 
             int hymnNumber = Integer.parseInt(fileName.replace(".mp3", ""));
 
@@ -107,16 +99,16 @@ public class AudioStorageImpl implements AudioStorage {
                 continue;
             }
 
+            String audioUrl = publicUrl + "/hymns/" + fileName;
+
             Audio audio = new Audio();
             audio.setHymn(hymn);
-            audio.setUrl(publicUrl + "/hymns/" + fileName);
+            audio.setUrl(audioUrl);
             audio.setSize(object.size());
             audio.setDuration(getDuration(object.key()));
 
             audioRepository.save(audio);
-
         }
-
     }
 
     private long getDuration(String key) {

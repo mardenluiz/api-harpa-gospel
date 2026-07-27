@@ -13,12 +13,13 @@ import java.util.UUID;
 public interface HymnRepository extends JpaRepository<Hymn, UUID> {
 
     boolean existsByNumber(Integer number);
+
     Optional<Hymn> findByNumber(int number);
 
     @Query(value = """
-    SELECT *
-    FROM hymn
-    WHERE lower(unaccent(title)) = lower(unaccent(:title))
-    """, nativeQuery = true)
+            SELECT *
+            FROM hymn
+            WHERE lower(unaccent(title)) = lower(unaccent(:title))
+            """, nativeQuery = true)
     Optional<Hymn> searchByTitle(@Param("title") String title);
 }

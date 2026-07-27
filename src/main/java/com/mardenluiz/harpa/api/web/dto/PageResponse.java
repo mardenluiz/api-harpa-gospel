@@ -2,7 +2,7 @@ package com.mardenluiz.harpa.api.web.dto;
 
 import java.util.List;
 
-public record PageResponse<T>(
+public record PageResponse<HymnDto>(
 
         List<HymnDto> content,
         int page,
