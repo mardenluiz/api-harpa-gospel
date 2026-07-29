@@ -3,8 +3,6 @@ package com.mardenluiz.harpa.api.web.controller;
 import com.mardenluiz.harpa.api.doc.AudioControllerOpenApi;
 import com.mardenluiz.harpa.api.web.dto.AudioDto;
 import com.mardenluiz.harpa.api.domain.service.AudioService;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +19,6 @@ public class AudioController implements AudioControllerOpenApi {
     public AudioController(AudioService service) {
         this.service = service;
     }
-
 
     @GetMapping("/{number}")
     public ResponseEntity<AudioDto> findByNumber(@PathVariable(name = "number")
